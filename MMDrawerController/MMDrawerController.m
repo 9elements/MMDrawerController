@@ -138,6 +138,9 @@ static NSString *MMDrawerOpenSideKey = @"MMDrawerOpenSide";
 @property (nonatomic, copy) MMDrawerGestureCompletionBlock gestureCompletion;
 @property (nonatomic, assign, getter = isAnimatingDrawer) BOOL animatingDrawer;
 
+@property(nonatomic, strong) UIPanGestureRecognizer *panGestureRecognizer;
+@property(nonatomic, strong) UITapGestureRecognizer *tapGestureRecognizer;
+
 @end
 
 @implementation MMDrawerController
@@ -1211,13 +1214,13 @@ static inline CGFloat originXForDrawerOriginAndTargetOriginOffset(CGFloat origin
 
 #pragma mark - Helpers
 -(void)setupGestureRecognizers{
-    UIPanGestureRecognizer * pan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panGestureCallback:)];
-    [pan setDelegate:self];
-    [self.view addGestureRecognizer:pan];
+    self.panGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panGestureCallback:)];
+    [self.panGestureRecognizer setDelegate:self];
+    [self.view addGestureRecognizer:self.panGestureRecognizer];
     
-    UITapGestureRecognizer * tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapGestureCallback:)];
-    [tap setDelegate:self];
-    [self.view addGestureRecognizer:tap];
+    self.tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapGestureCallback:)];
+    [self.tapGestureRecognizer setDelegate:self];
+    [self.view addGestureRecognizer:self.tapGestureRecognizer];
 }
 
 -(void)prepareToPresentDrawer:(MMDrawerSide)drawer animated:(BOOL)animated{
